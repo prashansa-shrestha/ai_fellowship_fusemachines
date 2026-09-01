@@ -98,3 +98,67 @@ The first command runs schema, intake, and retrieval behavior tests. The second 
 catch syntax/import problems without running the app. The third checks edited text for whitespace errors. Retrieval
 tests cover adversarial same-content tenant isolation, explainable ranking, revised-query replacement, fixed-time
 version filtering, `top_k` validation, deterministic ties, and mutation-resistant index snapshots.
+
+# Trustilo Phase 3: Grounded Drafting and Independent Verification
+
+Phase 3 turns retrieved evidence into a citation-safe draft, then checks that draft without trusting how it was
+created. Both stages are deterministic local baselines, which keeps a supervisor demo quick and makes every result
+easy to explain.
+
+## What happens
+
+`draft(question, evidence, max_claims=3)` accepts only canonical `Question` and `EvidenceChunk` objects. It first
+checks that every chunk belongs to the question's tenant and that each `chunk_id` is unique. With no evidence it
+returns a normal, explicit abstention. Otherwise, it creates at most `max_claims` claims in retrieval order. Each
+claim is the chunk's text with whitespace collapsed—not an invented paraphrase—and has one citation containing the
+exact chunk ID, document ID, and version. Answer, claim, and citation IDs are stable hashes of their content and
+provenance. The answer remains `drafted`; this stage does not decide whether it should pass or escalate.
+
+`check(answer, evidence, as_of=...)` independently rebuilds a tenant-scoped lookup from the supplied chunks. For
+each claim it checks that the citation points back to the correct claim, resolves to a supplied chunk, matches the
+chunk's document ID and version, and is a normalized passage of the cited evidence. It also reports explicit
+clause-and-subject-local polarity conflicts such as “required” versus “optional” or the presence versus absence of
+“not”. Negated equivalents such as “not optional” and “required” are not flagged as contradictions. Verification
+also flags evidence that is expired or not yet valid at the requested time. The support score is simply
+supported claims divided by total claims. Verification never edits a claim and this checkpoint never requests a
+retrieval retry.
+
+The canonical model currently has `contradiction_flags` and `freshness_flags`, but no general citation-error field.
+For now, citation resolution and support issues use clear prefixes in `contradiction_flags`, such as
+`unresolved_citation:`, `citation_version_mismatch:`, and `unsupported_claim:`. Actual polarity conflicts start with
+`contradiction:`. This avoids changing the shared schema during a partial checkpoint.
+
+For example, suppose the supplied chunk says `Privileged access requires MFA.` Drafting produces that exact claim
+and a citation to the chunk's real document and version. Verification resolves the citation and returns a support
+score of `1.0`. If someone injects the claim `Privileged access does not require MFA.` while leaving the same
+citation attached, Verification gives that claim no support and emits both unsupported and negation-contradiction
+flags. If no chunks were supplied, Drafting creates a claim-free abstention and Verification returns `1.0` with
+`abstention:no_claims_to_verify`; here `1.0` means no unsupported material claim was emitted, not that the question
+was answered. The shared schema also permits an abstention to carry partial claims. Those are not automatically
+safe: Verification emits `abstention:partial_claims_present` and checks every partial claim normally. An uncited
+partial claim therefore scores `0.0` and receives an `uncited_claim:` issue.
+
+## Limits
+
+- Drafting copies conservative evidence passages; it does not yet compose a polished answer through the configured
+  LLM-provider abstraction.
+- Text support is contiguous whole-token containment after case and punctuation normalization, not semantic
+  entailment. The small polarity rules are useful testable signals, not a complete contradiction detector.
+- Prior approved-answer consistency, composite confidence, production requery behavior, escalation, and audit
+  persistence are not connected yet.
+- Freshness is reported separately from textual support, so stale evidence can still have a `1.0` support score and
+  must be handled by the later escalation policy.
+- FR5, FR6, FR7, and NFR1 remain `in progress` until their held-out success criteria are measured.
+
+## Verification
+
+Run the complete local checkpoint suite with:
+
+```bash
+pytest -q tests/unit
+python3 -m compileall -q src/trustilo/drafting src/trustilo/verification tests/unit/test_drafting.py tests/unit/test_verification.py
+git diff --check -- .
+```
+
+The first command runs all current unit tests. The second checks that the new modules and tests compile. The third
+reports malformed whitespace in the working changes.
