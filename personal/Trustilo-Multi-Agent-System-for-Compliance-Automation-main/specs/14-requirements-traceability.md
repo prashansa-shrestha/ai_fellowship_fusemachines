@@ -19,7 +19,7 @@ real data, not just "code exists").
 | FR1 | Questionnaire ingestion | Must | ≥95% extraction correctness on curated format tests | `specs/04-intake-classification.md` | `src/trustilo/intake` | in progress |
 | FR2 | Question classification | Must | ≥85% macro-F1 domain labels (or agreed simpler metric) | `specs/04-intake-classification.md` | `src/trustilo/intake` | in progress |
 | FR3 | Knowledge ingestion | Must | Every indexed chunk has doc ID, version, source, tenant namespace | `specs/02-data-model.md`, `specs/12-security-and-governance.md` | `src/trustilo/knowledge_library` | not started |
-| FR4 | Hybrid retrieval | Must | Evidence Recall@10 ≥90% on gold retrieval set | `specs/05-retrieval.md` | `src/trustilo/retrieval` | not started |
+| FR4 | Hybrid retrieval | Must | Evidence Recall@10 ≥90% on gold retrieval set | `specs/05-retrieval.md` | `src/trustilo/retrieval` | in progress |
 | FR5 | Grounded drafting | Must | ≥95% claim-support precision for auto-finalized answers | `specs/06-drafting.md` | `src/trustilo/drafting` | not started |
 | FR6 | Citation generation | Must | 100% of auto-finalized answers have valid, traceable citations | `specs/06-drafting.md` | `src/trustilo/drafting` | not started |
 | FR7 | Verification | Must | Detect ≥90% of injected unsupported/contradictory test answers | `specs/07-verification.md` | `src/trustilo/verification` | not started |
@@ -34,7 +34,7 @@ real data, not just "code exists").
 | ID | Requirement | Priority | Success criterion | Spec | Status |
 |---|---|---|---|---|---|
 | NFR1 | Groundedness | Must | ≥95% claim-support precision on held-out SME review; ≤2% unsupported-claim rate (stretch) | `specs/06-drafting.md`, `specs/07-verification.md` | not started |
-| NFR2 | Security isolation | Must | Encryption in transit/at rest in deployment design; zero cross-tenant retrieval in tests | `specs/05-retrieval.md`, `specs/12-security-and-governance.md` | not started |
+| NFR2 | Security isolation | Must | Encryption in transit/at rest in deployment design; zero cross-tenant retrieval in tests | `specs/05-retrieval.md`, `specs/12-security-and-governance.md` | in progress |
 | NFR3 | Auditability | Must | 100% of finalized answers have reconstructable question/evidence/draft/verifier/reviewer/version lineage | `specs/03-orchestrator.md`, `specs/10-export-audit-feedback.md` | not started |
 | NFR4 | Latency | Should | 100-question run < 15 minutes excluding human review, normal API availability | `specs/03-orchestrator.md` | not started |
 | NFR5 | Reliability | Must | Idempotent retries; failed stage resumable from stored state in fault-injection tests | `specs/03-orchestrator.md` | not started |
