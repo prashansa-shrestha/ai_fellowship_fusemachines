@@ -1,0 +1,23 @@
+---
+globs: src/**/*.py,tests/**/*.py
+alwaysApply: false
+---
+- Type-annotate everything; models are Pydantic, not bare dicts or
+  namedtuples, for anything crossing a stage boundary.
+- Stage entry points are pure functions of their explicit input state
+  (see `specs/03-orchestrator.md`) — no hidden global/module-level
+  mutable state, so retries stay idempotent.
+- Structured logging (`structlog`) on every LLM/retrieval call: at
+  minimum `stage`, `question_id`, `tenant_id`, `latency_ms`, and
+  `cost_usd`/token counts (NFR8). Don't use bare `print`.
+- No stage calls an LLM provider SDK directly — go through
+  `src/trustilo/common/llm_provider.py` (NFR7). If that module doesn't
+  yet support what you need, extend it there, don't bypass it.
+- Async I/O (`async def`) for anything hitting the DB, an LLM API, or
+  network — this is a concurrent multi-question pipeline, not a script.
+- Retries for transient failures use `tenacity` with bounded attempts
+  and backoff; that's separate from the one-shot verification→
+  retrieval retry, which is an explicit Orchestrator-managed
+  transition, not a generic retry decorator.
+- New module in `src/trustilo/<stage>/`: read that package's nested
+  `AGENTS.md` and the matching `specs/0N-*.md` file first.

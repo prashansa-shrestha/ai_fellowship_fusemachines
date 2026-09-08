@@ -1,0 +1,21 @@
+---
+description: Schema and versioning conventions for Trustilo's core data model (Question, Evidence, Answer, Citation, VerificationResult, ReviewTask, AuditEvent). Applies when adding fields, creating new schemas, or touching src/trustilo/common/schemas.py or specs/02-data-model.md.
+alwaysApply: false
+---
+- Use the canonical Pydantic models in `src/trustilo/common/schemas.py`
+  for every cross-stage payload. Don't pass ad hoc dicts between
+  stages — if a stage needs a new field, add it to the schema.
+- `EvidenceChunk` is invalid without `doc_id`, `version`, `source`, and
+  `tenant_id` — this is a hard validator, not a code-review reminder
+  (FR3's literal success criterion).
+- A `Claim` with zero citations is only valid when the parent
+  `Answer.abstained is True`. Enforce this as a model validator.
+- `EscalationDecision.reason_codes` must be non-empty whenever
+  `decision == "escalate"` (NFR9).
+- IDs are opaque strings (e.g. ULIDs) generated client-side, not
+  auto-increment integers — this is what makes idempotent retries in
+  the Orchestrator possible.
+- Superseding a document's version never deletes old `EvidenceChunk`
+  rows — mark them superseded so existing citations still resolve.
+- Any schema change: update `specs/02-data-model.md`'s table in the
+  same commit. The two must never drift.
