@@ -1,0 +1,199 @@
+[
+  {
+    "case_id": "simple_lookup",
+    "query": "What models or approaches does Week 14 discuss for intent routing?",
+    "task_completed": true,
+    "tool_correct": true,
+    "trajectory_length": 2,
+    "tokens_total": 2657,
+    "tokens_by_agent": {
+      "researcher": 1929,
+      "verifier": 728
+    },
+    "stopped_reason": "verified",
+    "mode": "multi_agent",
+    "failure_class": null,
+    "failure_notes": "",
+    "answer_preview": "Week 14 discusses two main approaches for intent routing: fine-tuning BERT and its variants, and fine-tuning LLM/SLM.",
+    "tool_log": [
+      {
+        "name": "search_course_materials",
+        "args": {
+          "query": "Week 14 intent routing models approaches"
+        },
+        "ok": true
+      },
+      {
+        "name": "propose_answer",
+        "args": {
+          "escalate_to_human": false
+        },
+        "ok": true
+      }
+    ],
+    "elapsed_sec": 7.18,
+    "inject_failure": null
+  },
+  {
+    "case_id": "cross_week_compare",
+    "query": "Compare Week 10 and Week 11 computer-vision projects: what each focuses on, and which looks more product-oriented? Recommend one.",
+    "task_completed": true,
+    "tool_correct": true,
+    "trajectory_length": 4,
+    "tokens_total": 43472,
+    "tokens_by_agent": {
+      "researcher": 23691,
+      "verifier": 19781
+    },
+    "stopped_reason": "verified",
+    "mode": "multi_agent",
+    "failure_class": null,
+    "failure_notes": "",
+    "answer_preview": "Recommendation: Week 11 looks more product-oriented.  Comparison:  | Feature             | Week 10 Computer Vision Project                                                                                                                                                              ",
+    "tool_log": [
+      {
+        "name": "load_skill",
+        "args": {
+          "skill_name": "compare_course_options"
+        },
+        "ok": true
+      },
+      {
+        "name": "search_course_materials",
+        "args": {
+          "query": "Week 10 computer vision project focus"
+        },
+        "ok": true
+      },
+      {
+        "name": "search_course_materials",
+        "args": {
+          "query": "Week 11 computer vision project focus"
+        },
+        "ok": true
+      },
+      {
+        "name": "propose_answer",
+        "args": {
+          "escalate_to_human": false
+        },
+        "ok": true
+      }
+    ],
+    "elapsed_sec": 82.92,
+    "inject_failure": null
+  },
+  {
+    "case_id": "missing_topic",
+    "query": "What does the course say about quantum annealing schedules?",
+    "task_completed": true,
+    "tool_correct": true,
+    "trajectory_length": 2,
+    "tokens_total": 2868,
+    "tokens_by_agent": {
+      "researcher": 1991,
+      "verifier": 877
+    },
+    "stopped_reason": "verified",
+    "mode": "multi_agent",
+    "failure_class": null,
+    "failure_notes": "",
+    "answer_preview": "The course materials do not seem to contain information about quantum annealing schedules.",
+    "tool_log": [
+      {
+        "name": "search_course_materials",
+        "args": {
+          "query": "quantum annealing schedules"
+        },
+        "ok": true
+      },
+      {
+        "name": "propose_answer",
+        "args": {
+          "escalate_to_human": true
+        },
+        "ok": true
+      }
+    ],
+    "elapsed_sec": 28.96,
+    "inject_failure": null
+  },
+  {
+    "case_id": "ambiguous_compare",
+    "query": "Which week is better?",
+    "task_completed": true,
+    "tool_correct": true,
+    "trajectory_length": 1,
+    "tokens_total": 726,
+    "tokens_by_agent": {
+      "researcher": 726
+    },
+    "stopped_reason": "ask_clarification",
+    "mode": "multi_agent",
+    "failure_class": null,
+    "failure_notes": "",
+    "answer_preview": "Better for what purpose? Please specify what you would like to compare (e.g., 'Which week is better for understanding deep learning concepts?').",
+    "tool_log": [
+      {
+        "name": "ask_clarification",
+        "args": {
+          "question": "Better for what purpose? Please specify what you would like to compare (e.g., 'Which week is better for understanding deep learning concepts?')."
+        },
+        "ok": true
+      }
+    ],
+    "elapsed_sec": 2.4,
+    "inject_failure": null
+  },
+  {
+    "case_id": "failure_tool_unavailable",
+    "query": "Summarize the Week 9 manufacturing defects assignment.",
+    "task_completed": false,
+    "tool_correct": false,
+    "trajectory_length": 0,
+    "tokens_total": 0,
+    "tokens_by_agent": {},
+    "stopped_reason": "exception",
+    "mode": "multi_agent",
+    "failure_class": "hard",
+    "failure_notes": "Harness caught exception: ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.",
+    "answer_preview": "",
+    "tool_log": [],
+    "elapsed_sec": 439.57,
+    "inject_failure": "tool_unavailable"
+  },
+  {
+    "case_id": "failure_malformed_retrieval",
+    "query": "What does Week 12 say about the NER pipeline?",
+    "task_completed": false,
+    "tool_correct": false,
+    "trajectory_length": 0,
+    "tokens_total": 0,
+    "tokens_by_agent": {},
+    "stopped_reason": "exception",
+    "mode": "multi_agent",
+    "failure_class": "hard",
+    "failure_notes": "Harness caught exception: ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.",
+    "answer_preview": "",
+    "tool_log": [],
+    "elapsed_sec": 444.99,
+    "inject_failure": "malformed_retrieval"
+  },
+  {
+    "case_id": "single_agent_baseline",
+    "query": "What models or approaches does Week 14 discuss for intent routing?",
+    "task_completed": false,
+    "tool_correct": false,
+    "trajectory_length": 0,
+    "tokens_total": 0,
+    "tokens_by_agent": {},
+    "stopped_reason": "exception",
+    "mode": "single_agent",
+    "failure_class": "hard",
+    "failure_notes": "Harness caught exception: ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.",
+    "answer_preview": "",
+    "tool_log": [],
+    "elapsed_sec": 445.09,
+    "inject_failure": null
+  }
+]
